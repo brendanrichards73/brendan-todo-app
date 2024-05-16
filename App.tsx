@@ -1,3 +1,4 @@
+import React, { useCallback, useState } from "react";
 import {
     StyleSheet,
     View,
@@ -6,17 +7,47 @@ import {
     Platform,
     TextInput,
     TouchableOpacity,
+    Keyboard,
 } from "react-native";
 import TodoItem from "./src/todo-Item";
 
+type Task = string;
+
 export default function App() {
+    const [task, setTask] = useState<Task | null>(null);
+    const [taskItems, setTaskItems] = useState<Task[]>([]);
+
+    const handleAddItem = useCallback(() => {
+        Keyboard.dismiss();
+        if (task) {
+            setTaskItems((prevTaskItems) => [...prevTaskItems, task]);
+            setTask(null);
+        }
+    }, [task]);
+
+    const deleteTask = useCallback((index: number) => {
+        setTaskItems((prevTaskItems) => {
+            const itemsCopy = [...prevTaskItems];
+            itemsCopy.splice(index, 1);
+            return itemsCopy;
+        });
+    }, []);
+
     return (
         <View style={styles.container}>
             <View style={styles.tasksWrapper}>
                 <Text style={styles.sectionTitle}>Things To Do</Text>
                 <View style={styles.todoItems}>
-                    <TodoItem text={"Item 1"}></TodoItem>
-                    <TodoItem text={"Item 2"}></TodoItem>
+                    {taskItems.map((item, index) => {
+                        return (
+                            <TouchableOpacity
+                                key={index}
+                                onPress={() => deleteTask(index)}
+                            >
+                                <TodoItem text={item} />
+                            </TouchableOpacity>
+                        );
+                    })}
                 </View>
             </View>
             <KeyboardAvoidingView
@@ -26,10 +57,10 @@ export default function App() {
                 <TextInput
                     style={styles.input}
                     placeholder={"Enter task here...."}
-                    value={""}
-                    onChangeText={() => {}}
+                    value={task ?? ""}
+                    onChangeText={(text) => setTask(text)}
                 />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => handleAddItem()}>
                     <View style={styles.addTaskWrapper}>
                         <Text style={styles.addTask}>+</Text>
                     </View>
