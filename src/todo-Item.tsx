@@ -15,7 +15,7 @@ export default function TodoItem({
     isDone,
 }: TodoItemProps) {
     return (
-        <View style={styles.todoItem}>
+        <View style={[styles.todoItem, isDone ? styles.todoItemDone : {}]}>
             <View style={styles.textWrapper}>
                 <TouchableOpacity
                     style={styles.checkBox}
@@ -26,14 +26,13 @@ export default function TodoItem({
 
                 <Text style={styles.itemText}>{text}</Text>
             </View>
-            <TouchableOpacity
-                onPress={onDelete}
-                style={styles.deleteTouchableArea}
-            >
-                <View style={styles.deleteWrapper}>
-                    <Text style={styles.deleteText}>Del</Text>
-                </View>
-            </TouchableOpacity>
+            {isDone && (
+                <TouchableOpacity onPress={onDelete}>
+                    <View style={styles.deleteWrapper}>
+                        <Text style={styles.deleteText}>Delete</Text>
+                    </View>
+                </TouchableOpacity>
+            )}
         </View>
     );
 }
@@ -41,12 +40,15 @@ export default function TodoItem({
 const styles = StyleSheet.create({
     todoItem: {
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "space-between",
         backgroundColor: "#FFF",
-        padding: 15,
+        padding: 20,
         borderRadius: 10,
         marginBottom: 20,
+    },
+    todoItemDone: {
+        backgroundColor: "#F8BBD0",
     },
     textWrapper: {
         flex: 1,
@@ -73,9 +75,10 @@ const styles = StyleSheet.create({
         flex: 1,
         maxWidth: "80%",
         fontSize: 18,
+        fontWeight: "bold",
     },
     deleteWrapper: {
-        width: 45,
+        width: 60,
         height: 45,
         borderColor: "#FF0033",
         borderWidth: 2,
@@ -83,9 +86,6 @@ const styles = StyleSheet.create({
         backgroundColor: "#FF0033",
         justifyContent: "center",
         alignItems: "center",
-    },
-    deleteTouchableArea: {
-        padding: 10,
     },
     deleteText: {
         color: "#FFF",
