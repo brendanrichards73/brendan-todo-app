@@ -4,13 +4,26 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 type TodoItemProps = {
     text: string;
     onDelete: () => void;
+    onDoneToggle: () => void;
+    isDone: boolean;
 };
 
-export default function TodoItem({ text, onDelete }: TodoItemProps) {
+export default function TodoItem({
+    text,
+    onDelete,
+    onDoneToggle,
+    isDone,
+}: TodoItemProps) {
     return (
         <View style={styles.todoItem}>
             <View style={styles.textWrapper}>
-                <TouchableOpacity style={styles.square}></TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.checkBox}
+                    onPress={onDoneToggle}
+                >
+                    {isDone && <Text style={styles.checkMark}>✔</Text>}
+                </TouchableOpacity>
+
                 <Text style={styles.itemText}>{text}</Text>
             </View>
             <TouchableOpacity
@@ -41,13 +54,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flexWrap: "wrap",
     },
-    square: {
-        width: 24,
-        height: 24,
-        backgroundColor: "#1C2833",
+    checkBox: {
+        justifyContent: "center",
+        alignItems: "center",
+        width: 30,
+        height: 30,
+        borderWidth: 2,
         opacity: 0.4,
         borderRadius: 5,
         marginRight: 15,
+    },
+    checkMark: {
+        color: "green",
+        fontSize: 20,
+        fontWeight: "bold",
     },
     itemText: {
         flex: 1,
@@ -55,8 +75,8 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     deleteWrapper: {
-        width: 40,
-        height: 40,
+        width: 45,
+        height: 45,
         borderColor: "#FF0033",
         borderWidth: 2,
         borderRadius: 5,

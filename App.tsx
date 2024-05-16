@@ -11,26 +11,41 @@ import {
 } from "react-native";
 import TodoItem from "./src/todo-Item";
 
-type Task = string;
+type Task = {
+    id: number;
+    text: string;
+    done: boolean;
+};
+
+let taskId = 0;
 
 export default function App() {
-    const [task, setTask] = useState<Task | null>(null);
+    const [task, setTask] = useState<string | null>(null);
     const [taskItems, setTaskItems] = useState<Task[]>([]);
 
     const handleAddItem = useCallback(() => {
         Keyboard.dismiss();
         if (task) {
-            setTaskItems((prevTaskItems) => [...prevTaskItems, task]);
+            setTaskItems((prevTaskItems) => [
+                ...prevTaskItems,
+                { id: taskId++, text: task, done: false },
+            ]);
             setTask(null);
         }
     }, [task]);
 
-    const deleteTask = useCallback((index: number) => {
-        setTaskItems((prevTaskItems) => {
-            const itemsCopy = [...prevTaskItems];
-            itemsCopy.splice(index, 1);
-            return itemsCopy;
-        });
+    const deleteTask = useCallback((id: number) => {
+        setTaskItems((prevTaskItems) =>
+            prevTaskItems.filter((task) => task.id !== id)
+        );
+    }, []);
+
+    const toggleDone = useCallback((id: number) => {
+        setTaskItems((prevTaskItems) =>
+            prevTaskItems.map((task) =>
+                task.id === id ? { ...task, done: !task.done } : task
+            )
+        );
     }, []);
 
     return (
@@ -38,12 +53,14 @@ export default function App() {
             <View style={styles.tasksWrapper}>
                 <Text style={styles.sectionTitle}>Things To Do</Text>
                 <View style={styles.todoItems}>
-                    {taskItems.map((item, index) => {
+                    {taskItems.map((item) => {
                         return (
                             <TodoItem
-                                key={index}
-                                text={item}
-                                onDelete={() => deleteTask(index)}
+                                key={item.id}
+                                text={item.text}
+                                onDelete={() => deleteTask(item.id)}
+                                onDoneToggle={() => toggleDone(item.id)}
+                                isDone={item.done}
                             />
                         );
                     })}
