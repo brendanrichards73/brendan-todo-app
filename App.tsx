@@ -1,4 +1,12 @@
-import { StyleSheet, View, Text } from "react-native";
+import {
+    StyleSheet,
+    View,
+    Text,
+    KeyboardAvoidingView,
+    Platform,
+    TextInput,
+    TouchableOpacity,
+} from "react-native";
 import TodoItem from "./src/todo-Item";
 
 export default function App() {
@@ -11,6 +19,22 @@ export default function App() {
                     <TodoItem text={"Item 2"}></TodoItem>
                 </View>
             </View>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.writeTaskWrapper}
+            >
+                <TextInput
+                    style={styles.input}
+                    placeholder={"Enter task here...."}
+                    value={""}
+                    onChangeText={() => {}}
+                />
+                <TouchableOpacity>
+                    <View style={styles.addTaskWrapper}>
+                        <Text style={styles.addTask}>+</Text>
+                    </View>
+                </TouchableOpacity>
+            </KeyboardAvoidingView>
         </View>
     );
 }
@@ -18,7 +42,7 @@ export default function App() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fff",
+        backgroundColor: "#D5D8DC",
     },
     sectionTitle: {
         fontSize: 30,
@@ -30,5 +54,39 @@ const styles = StyleSheet.create({
     },
     todoItems: {
         marginTop: 30,
+    },
+    writeTaskWrapper: {
+        position: "absolute",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        bottom: 60,
+        width: "100%",
+    },
+    input: {
+        fontSize: 20,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        width: 250,
+        backgroundColor: "#FFF",
+        borderWidth: 1,
+        borderColor: "#C0C0C0",
+        borderRadius: 60,
+    },
+    addTaskWrapper: {
+        width: 60,
+        height: 60,
+        backgroundColor: "#D4EFDF",
+        borderRadius: 60,
+        borderWidth: 1,
+        borderColor: "#4CAF50",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    addTask: {
+        fontSize: 30,
+        fontWeight: "bold",
+        color: "#4CAF50",
+        backgroundColor: "#D4EFDF",
     },
 });
