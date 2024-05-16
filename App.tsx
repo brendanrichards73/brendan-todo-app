@@ -25,6 +25,14 @@ export default function App() {
         }
     }, [task]);
 
+    const deleteTask = useCallback((index: number) => {
+        setTaskItems((prevTaskItems) => {
+            const itemsCopy = [...prevTaskItems];
+            itemsCopy.splice(index, 1);
+            return itemsCopy;
+        });
+    }, []);
+
     return (
         <View style={styles.container}>
             <View style={styles.tasksWrapper}>
@@ -32,7 +40,10 @@ export default function App() {
                 <View style={styles.todoItems}>
                     {taskItems.map((item, index) => {
                         return (
-                            <TouchableOpacity key={index}>
+                            <TouchableOpacity
+                                key={index}
+                                onPress={() => deleteTask(index)}
+                            >
                                 <TodoItem text={item} />
                             </TouchableOpacity>
                         );
