@@ -1,0 +1,6 @@
+//1. create todo list
+//2. create todolist item
+//3. create styles
+//4. add stateManagement
+//5. handleAddItem - create function then add to text input and then touchable opacity
+//6. create deleteTask function
