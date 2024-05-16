@@ -40,12 +40,11 @@ export default function App() {
                 <View style={styles.todoItems}>
                     {taskItems.map((item, index) => {
                         return (
-                            <TouchableOpacity
+                            <TodoItem
                                 key={index}
-                                onPress={() => deleteTask(index)}
-                            >
-                                <TodoItem text={item} />
-                            </TouchableOpacity>
+                                text={item}
+                                onDelete={() => deleteTask(index)}
+                            />
                         );
                     })}
                 </View>
