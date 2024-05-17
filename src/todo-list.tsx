@@ -19,7 +19,7 @@ export const TodoList: React.FC<TodoListProps> = ({
     return (
         <View style={styles.container}>
             <View style={styles.titleRow}>
-                <Text style={styles.sectionTitle}>Todays 2-Do's!</Text>
+                <Text style={styles.sectionTitle}>Things to do</Text>
                 <Text style={styles.dateText}>{formattedDate}</Text>
             </View>
             {taskItems.length > 0 && (
