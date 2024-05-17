@@ -25,6 +25,7 @@ export const AddTask: React.FC<AddTaskProps> = ({
                 placeholder={"Enter task here...."}
                 value={task ?? ""}
                 onChangeText={(text) => setTask(text)}
+                onSubmitEditing={handleAddItem}
             />
             <TouchableOpacity onPress={handleAddItem}>
                 <View style={styles.addTaskWrapper}>
