@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 type TodoItemProps = {
     text: string;
@@ -15,29 +16,43 @@ export default function TodoItem({
     isDone,
 }: TodoItemProps) {
     return (
-        <View style={[styles.todoItem, isDone ? styles.todoItemDone : {}]}>
-            <View style={styles.textWrapper}>
-                <TouchableOpacity
-                    style={styles.checkBox}
-                    onPress={onDoneToggle}
-                >
-                    {isDone && <Text style={styles.checkMark}>✔</Text>}
-                </TouchableOpacity>
+        <View style={styles.container}>
+            <View style={[styles.todoItem, isDone ? styles.todoItemDone : {}]}>
+                <View style={styles.textWrapper}>
+                    <TouchableOpacity
+                        style={styles.checkBox}
+                        onPress={onDoneToggle}
+                    >
+                        {isDone && (
+                            <Ionicons
+                                name="checkmark-circle"
+                                size={32}
+                                color="green"
+                            />
+                        )}
+                    </TouchableOpacity>
 
-                <Text style={styles.itemText}>{text}</Text>
+                    <Text style={styles.itemText}>{text}</Text>
+                </View>
+                {isDone && (
+                    <TouchableOpacity onPress={onDelete}>
+                        <View style={styles.deleteWrapper}>
+                            <Text style={styles.deleteText}>Delete</Text>
+                        </View>
+                    </TouchableOpacity>
+                )}
             </View>
-            {isDone && (
-                <TouchableOpacity onPress={onDelete}>
-                    <View style={styles.deleteWrapper}>
-                        <Text style={styles.deleteText}>Delete</Text>
-                    </View>
-                </TouchableOpacity>
-            )}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: "column",
+        height: "80%",
+        width: "100%",
+    },
     todoItem: {
         flexDirection: "row",
         alignItems: "flex-start",
@@ -49,6 +64,7 @@ const styles = StyleSheet.create({
     },
     todoItemDone: {
         backgroundColor: "#F8BBD0",
+        opacity: 0.75,
     },
     textWrapper: {
         flex: 1,
@@ -59,8 +75,8 @@ const styles = StyleSheet.create({
     checkBox: {
         justifyContent: "center",
         alignItems: "center",
-        width: 30,
-        height: 30,
+        width: 35,
+        height: 35,
         borderWidth: 2,
         opacity: 0.4,
         borderRadius: 5,
@@ -79,7 +95,7 @@ const styles = StyleSheet.create({
     },
     deleteWrapper: {
         width: 60,
-        height: 45,
+        height: 35,
         borderColor: "#FF0033",
         borderWidth: 2,
         borderRadius: 5,
