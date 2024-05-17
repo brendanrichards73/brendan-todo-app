@@ -42,6 +42,7 @@ export const TodoList: React.FC<TodoListProps> = ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        marginTop: 20,
     },
     sectionTitle: {
         fontSize: 30,
@@ -61,13 +62,11 @@ const styles = StyleSheet.create({
         borderRadius: 60,
         borderWidth: 3,
         borderColor: "#C0C0C0",
-        marginBottom: 50,
     },
     doneWrapper: {
         flexDirection: "row",
-
-        paddingBottom: 10,
         marginLeft: 10,
+        marginTop: 40,
     },
     doneText: {
         fontSize: 20,
@@ -76,6 +75,6 @@ const styles = StyleSheet.create({
     },
     itemList: {
         paddingHorizontal: 5,
-        paddingVertical: 20,
+        paddingVertical: 40,
     },
 });
