@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
     StyleSheet,
     View,
@@ -6,6 +6,7 @@ import {
     Platform,
     Keyboard,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import TodoItem from "./src/todo-Item";
 import { AddTask } from "./src/add-item";
 import { TodoList } from "./src/todo-list";
@@ -17,22 +18,45 @@ export default function App() {
     const [task, setTask] = useState<string | null>(null);
     const [taskItems, setTaskItems] = useState<Task[]>([]);
 
-    const handleAddItem = useCallback(() => {
+    useEffect(() => {
+        const loadTasks = async () => {
+            try {
+                const value = await AsyncStorage.getItem("@tasks");
+                if (value !== null) {
+                    setTaskItems(JSON.parse(value));
+                }
+            } catch (e) {
+                ("There was an error loading the tasks!");
+            }
+        };
+
+        loadTasks();
+    }, []);
+
+    const handleAddItem = useCallback(async () => {
         Keyboard.dismiss();
         if (task) {
-            setTaskItems((prevTaskItems) => [
-                ...prevTaskItems,
+            const newTasks = [
+                ...taskItems,
                 { id: taskId++, text: task, done: false },
-            ]);
+            ];
+            setTaskItems(newTasks);
             setTask(null);
         }
-    }, [task]);
+    }, [task, taskItems]);
 
-    const deleteTask = useCallback((id: number) => {
-        setTaskItems((prevTaskItems) =>
-            prevTaskItems.filter((task) => task.id !== id)
-        );
-    }, []);
+    const deleteTask = useCallback(
+        async (id: number) => {
+            const newTasks = taskItems.filter((task) => task.id !== id);
+            setTaskItems(newTasks);
+            try {
+                await AsyncStorage.setItem("@tasks", JSON.stringify(newTasks));
+            } catch (e) {
+                ("there was an error saving the tasks!");
+            }
+        },
+        [taskItems]
+    );
 
     const toggleDone = useCallback((id: number) => {
         setTaskItems((prevTaskItems) =>
