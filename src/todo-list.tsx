@@ -32,7 +32,7 @@ export const TodoList: React.FC<TodoListProps> = ({
                 <FlatList
                     data={taskItems}
                     renderItem={renderItem}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={(item) => item.id}
                 />
             </View>
         </View>
