@@ -1,15 +1,15 @@
+import React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { Keyboard } from "react-native";
+import { FlatList, Keyboard } from "react-native";
 import { Task } from "./types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import "react-native-get-random-values";
 import { v4 as uuid } from "uuid";
 
-let taskId = 0;
-
-export function UseTasks() {
+export function UseTasks(flatListRef: React.RefObject<FlatList>) {
     const [task, setTask] = useState<string | null>(null);
     const [taskItems, setTaskItems] = useState<Task[]>([]);
+    const [isAddingItem, setIsAddingItem] = useState<boolean>(false);
 
     useEffect(() => {
         const loadTasks = async () => {
@@ -26,14 +26,25 @@ export function UseTasks() {
         loadTasks();
     }, []);
 
+    useEffect(() => {
+        if (isAddingItem) {
+            setTimeout(() => {
+                flatListRef.current?.scrollToEnd({ animated: true });
+                setIsAddingItem(false);
+            }, 100);
+        }
+    }, [isAddingItem]);
+
     const handleAddItem = useCallback(async () => {
         Keyboard.dismiss();
         if (task) {
+            setIsAddingItem(true);
             const newTasks = [
                 ...taskItems,
                 { id: uuid(), text: task, done: false },
             ];
             setTaskItems(newTasks);
+
             setTask(null);
             try {
                 await AsyncStorage.setItem("@tasks", JSON.stringify(newTasks));
@@ -44,8 +55,8 @@ export function UseTasks() {
     }, [task, taskItems]);
 
     const deleteTask = useCallback(
-        async (id: string) => {
-            const newTasks = taskItems.filter((task) => task.id !== id);
+        async (ids: string[]) => {
+            const newTasks = taskItems.filter((task) => !ids.includes(task.id));
             setTaskItems(newTasks);
             try {
                 await AsyncStorage.setItem("@tasks", JSON.stringify(newTasks));

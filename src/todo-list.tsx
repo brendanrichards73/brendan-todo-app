@@ -6,11 +6,13 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 type TodoListProps = {
     taskItems: Task[];
     renderItem: ({ item }: { item: Task }) => JSX.Element;
+    flatListRef: React.RefObject<FlatList>;
 };
 
 export const TodoList: React.FC<TodoListProps> = ({
     taskItems,
     renderItem,
+    flatListRef,
 }) => {
     const currentDate = new Date();
     const formattedDate = `${currentDate.getDate()}.${
@@ -30,9 +32,12 @@ export const TodoList: React.FC<TodoListProps> = ({
             )}
             <View style={styles.itemList}>
                 <FlatList
+                    ref={flatListRef}
                     data={taskItems}
+                    extraData={taskItems}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id}
+                    contentContainerStyle={{ paddingBottom: 100 }}
                 />
             </View>
         </View>
@@ -76,5 +81,6 @@ const styles = StyleSheet.create({
     itemList: {
         paddingHorizontal: 5,
         paddingVertical: 40,
+        paddingBottom: 135,
     },
 });
